@@ -118,6 +118,7 @@ func Walk(mazeMap *MazeMap) {
 		fmt.Println("queue:", queue)
 		if currentPoint.x == endPoint.x && currentPoint.y == endPoint.y {
 			PrintSteps(steps, mazeMap)
+			PrintShortestWay(steps, mazeMap, startPoint, endPoint)
 			fmt.Println("Reach!")
 			return
 		}
@@ -192,5 +193,63 @@ func PrintSteps(steps [][]int, mazeMap *MazeMap) {
 			}
 		}
 		fmt.Println()
+	}
+}
+
+func PrintShortestWay(steps [][]int, mazeMap *MazeMap, startPoint *Point, endPoint *Point) {
+	var maxStep int
+	maxStep = steps[endPoint.x][endPoint.y]
+	fmt.Println(maxStep)
+
+	var log []*Point
+	log = append(log, endPoint)
+
+	var direction *Direction
+	var currentPoint *Point
+	var nextPoint *Point
+	var choosePoint *Point
+	currentPoint = endPoint
+	for {
+
+		for _, direction = range directions {
+			nextPoint = NextPoint(currentPoint, direction)
+			fmt.Println("next point:", nextPoint)
+			if nextPoint.x < 0 {
+				fmt.Println("11")
+				continue
+			}
+			if nextPoint.x > len(steps)-1 {
+				fmt.Println("22")
+				continue
+			}
+			if nextPoint.y < 0 {
+				fmt.Println("33")
+				continue
+			}
+			//fmt.Println(nextPoint.y,len(steps[0])-1)
+			if nextPoint.y > len(steps[0])-1 {
+				fmt.Println("44")
+				continue
+			}
+			if choosePoint == nil && steps[nextPoint.x][nextPoint.y] != 0 {
+				fmt.Println("a")
+				choosePoint = nextPoint
+			}
+			fmt.Println("v:", steps[nextPoint.x][nextPoint.y])
+			if steps[nextPoint.x][nextPoint.y] != 0 && steps[nextPoint.x][nextPoint.y] < steps[choosePoint.x][choosePoint.y] {
+				fmt.Println("b")
+				choosePoint = nextPoint
+			}
+		}
+		fmt.Println("choose point:", choosePoint)
+		log = append(log, choosePoint)
+		currentPoint = choosePoint
+		if steps[choosePoint.x][choosePoint.y] == 1{
+			break
+		}
+	}
+
+	for i := len(log) - 1; i >= 0; i-- {
+		fmt.Println(log[i])
 	}
 }
