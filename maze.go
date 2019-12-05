@@ -104,11 +104,12 @@ func Walk(mazeMap *MazeMap) {
 
 	currentPoint = startPoint
 	queue = append(queue, currentPoint)
-	sequence := 1
+	sequence := 0
 	for {
+		sequence++
 		fmt.Println("queue len: ", len(queue))
 		if len(queue) == 0 {
-			PrintSteps(steps)
+			PrintSteps(steps, mazeMap)
 			fmt.Println("No way!")
 			return
 		}
@@ -116,7 +117,7 @@ func Walk(mazeMap *MazeMap) {
 		queue = queue[1:]
 		fmt.Println("queue:", queue)
 		if currentPoint.x == endPoint.x && currentPoint.y == endPoint.y {
-			PrintSteps(steps)
+			PrintSteps(steps, mazeMap)
 			fmt.Println("Reach!")
 			return
 		}
@@ -137,7 +138,6 @@ func Walk(mazeMap *MazeMap) {
 			queue = append(queue, point)
 			steps[point.x][point.y] = sequence
 			fmt.Println("point:", point, "sequence:", sequence)
-			sequence++
 		}
 	}
 }
@@ -182,10 +182,14 @@ func IsPointValid(point *Point, mazeMap *MazeMap, startPoint *Point) bool {
 	return true
 }
 
-func PrintSteps(steps [][]int) {
+func PrintSteps(steps [][]int, mazeMap *MazeMap) {
 	for i := range steps {
 		for j := range steps[i] {
-			fmt.Print(steps[i][j])
+			if mazeMap.Map[i][j] == 1 {
+				fmt.Printf("%5s", "x")
+			} else {
+				fmt.Printf("%5d", steps[i][j])
+			}
 		}
 		fmt.Println()
 	}
